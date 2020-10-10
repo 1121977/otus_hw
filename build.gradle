@@ -17,7 +17,7 @@ idea {
     }
 }
 allprojects {
-    group 'ru.otus'
+    group 'ru.ru.otus'
     repositories {
         mavenCentral()
     }
@@ -27,7 +27,7 @@ allprojects {
             imports {
                 mavenBom("org.springframework.boot:spring-boot-dependencies:2.3.1.RELEASE")
             }
-            dependency("com.google.guava:guava:2.3.1}")
+            dependency("com.google.guava:guava:29.0-jre")
         }
     }
     configurations.all {
