@@ -1,7 +1,7 @@
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
-    id 'com.github.johnrengelman.shadow'
+    id 'com.github.johnrengelman.shadow' apply true
     id 'application'
 }
 //sourceCompatibility = JavaVersion.VERSION_15
@@ -10,14 +10,12 @@ dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava'
 }
-shadowJar {    archiveBaseName.set('gradleHelloWorld')
+shadowJar {    archiveBaseName.set('helloOtusFat')
     archiveVersion.set('0.1')
     archiveClassifier.set('')
     manifest {
-        attributes 'Main-Class': 'ru.otus.App'
+        attributes 'Main-Class': 'ru.otus.HelloOtus'
     }
-    mainClassName = 'ru.otus.App'
+    mainClassName = 'ru.otus.HelloOtus'
 }
 tasks.build.dependsOn tasks.shadowJar
-
-//mainClassName = 'ru.otus.App'
