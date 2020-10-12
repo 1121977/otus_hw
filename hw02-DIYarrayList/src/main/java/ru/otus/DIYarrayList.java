@@ -62,9 +62,7 @@ public class DIYarrayList<T> implements List<T> {
     }
 
     @Override
-    public boolean addAll(Collection<? extends T> collection) {
-        throw new UnsupportedOperationException();
-    }
+    public boolean addAll(Collection<? extends T> collection) { throw new UnsupportedOperationException();  }
 
     @Override
     public boolean addAll(int i, Collection<? extends T> collection) {

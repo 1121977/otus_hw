@@ -1,7 +1,4 @@
 package ru.otus;
-import java.util.Collections;
-import java.util.Comparator;
-
 import static java.util.Collections.*;
 
 /**
@@ -28,21 +25,11 @@ public class App
         System.out.println("diYarrayListInteger2 = "  + diYarrayListInteger2.toString());
         addAll(diYarrayListString2,"a","b","c","d","f","a","b","c","d","f","a","b","c","d","f","a","b","c","d","f","six");
         System.out.println("diYarrayListString2 = " + diYarrayListString2.toString());
-        sort(diYarrayListString2, new Comparator<>() {
-            @Override
-            public int compare(String s, String t1) {
-                return s.compareTo(t1);
-            }
-        });
+        sort(diYarrayListString2, String::compareTo);
         System.out.println("diYarrayListString2 (after sort()) = " + diYarrayListString2.toString());
         addAll(diYarrayListInteger, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21);
         System.out.println("diYarrayListInteger (after addAll()) = "+diYarrayListInteger.toString());
-        sort(diYarrayListInteger, new Comparator<>() {
-            @Override
-            public int compare(Integer integer, Integer t1) {
-                return integer.compareTo(t1);
-            }
-        });
+        sort(diYarrayListInteger, Integer::compareTo);
         System.out.println("diYarrayListInteger (after sort()) = "+diYarrayListInteger.toString());
     }
 }
