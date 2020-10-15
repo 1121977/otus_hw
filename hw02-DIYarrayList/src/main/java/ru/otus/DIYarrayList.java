@@ -3,9 +3,12 @@ package ru.otus;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.lang.*;
+import java.util.function.Predicate;
 
 public class DIYarrayList<T> implements List<T> {
     protected T[] array;
+    private final int MIN_ARRAY_LENGTH = 10;
+    private int dIYarrayListLength = 0;
     @Override
     public int size() {
         if(this.isEmpty())
@@ -40,14 +43,12 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public boolean add(T t) {
-        if(this.array==null){
-            this.array = (T[])Array.newInstance(t.getClass(), 1);
-            this.array[0]=t;
-        }
-        else {
-            this.array=Arrays.copyOf(this.array,this.array.length+1);
-        }
-        this.array[this.array.length-1]=t;
+        if(this.array==null)
+            this.array = (T[])Array.newInstance(t.getClass(), MIN_ARRAY_LENGTH);
+        else
+            if (this.array.length == dIYarrayListLength)
+                this.array = Arrays.copyOf(this.array, this.array.length + (this.array.length >> 1));
+        this.array[dIYarrayListLength++]=t;
         return true;
     }
 
@@ -183,6 +184,6 @@ public class DIYarrayList<T> implements List<T> {
     }
 
     public String toString(){
-        return Arrays.toString(array);
+        return Arrays.toString(Arrays.stream(array).filter(Objects::nonNull).toArray());
     }
 }
