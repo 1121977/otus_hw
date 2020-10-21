@@ -7,9 +7,9 @@ plugins {
 }
 
 idea {
-    project {
+/*    project {
         languageLevel = 15
-    }
+    }*/
     module {
         downloadJavadoc = true
         downloadSources = true
