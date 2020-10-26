@@ -1,12 +1,9 @@
 package ru.otus;
 
 import java.lang.annotation.Annotation;
-import java.lang.annotation.AnnotationTypeMismatchException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class TestFW {
     private static short failedTest;
@@ -16,42 +13,46 @@ public class TestFW {
     }
     static void testStarter(Class<?> clazz) {
         Method [] methods = clazz.getDeclaredMethods();
-        List<Method> methodsWithAfterAnnotaion = new ArrayList<>();
-        List<Method> methodsWithBeforeAnnotaion = new ArrayList<>();
-        List<Method> methodsWithTestAnnotation = new ArrayList<>();
+        Map<Class<? extends Annotation>, Set<Method>> annotationSetMethod = new HashMap<>();
+        annotationSetMethod.put(Before.class, new HashSet<>());
+        annotationSetMethod.put(Test.class, new HashSet<>());
+        annotationSetMethod.put(After.class, new HashSet<>());
         for(Method method:methods){
-            if(method.isAnnotationPresent(Before.class)){ methodsWithBeforeAnnotaion.add(method);}
-            if(method.isAnnotationPresent(Test.class)){methodsWithTestAnnotation.add(method);}
-            if(method.isAnnotationPresent(After.class)){methodsWithAfterAnnotaion.add(method);}
+            for(Annotation annotation:method.getDeclaredAnnotations()){
+                Set<Method> methodSet = annotationSetMethod.get(annotation.annotationType());
+                if(methodSet!=null){
+                    methodSet.add(method);
+                }
+            }
         }
-        methodsWithTestAnnotation.forEach(_methodTest -> {
+        annotationSetMethod.get(Test.class).forEach(methodTest -> {
             Object testedObject;
             try {
                 testedObject = clazz.getConstructor().newInstance();
-                if (testedObject == null)
+                if (testedObject == null) {
                     throw new NullPointerException();
-                else
-                methodsExecution(methodsWithBeforeAnnotaion,testedObject);
-                try {
-                    _methodTest.invoke(testedObject);
+                } else {
+                    try {
+                        methodsExecution(annotationSetMethod.get(Before.class), testedObject);
+                        methodTest.invoke(testedObject);
+                        methodsExecution(annotationSetMethod.get(After.class), testedObject);
+                    } catch (Exception e) {
+                        failedTest++;
+                    }
                 }
-                catch (Exception e){
-                    failedTest++;
-                }
-                methodsExecution(methodsWithAfterAnnotaion, testedObject);
-            } catch (InstantiationException| IllegalAccessException | InvocationTargetException | NoSuchMethodException | NullPointerException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
         });
         System.out.println("Failed tests: " + failedTest);
-        System.out.println("Passed tests: " + (methodsWithTestAnnotation.size()-failedTest));
+        System.out.println("Passed tests: " + (methods.length-failedTest));
     }
 
-    private static void  methodsExecution(List<Method> methodList, Object object){
-        methodList.forEach(_method -> {
+    private static void  methodsExecution(Set<Method> methodSet, Object testedObject){
+        methodSet.forEach(method -> {
             try {
-                _method.invoke(object);
+                method.invoke(testedObject);
             }
             catch (IllegalAccessException | InvocationTargetException e){
                 e.printStackTrace();
