@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /*
@@ -12,16 +11,16 @@ import java.util.List;
 
 public class GCCompare {
     public static void main(String ... args){
-        List<Date> dateArray = new ArrayList<>();
-        dateArray.add(new Date());
+        List<Long> longArrayList = new ArrayList<>();
+        longArrayList.add((long) (Math.random() * Long.MAX_VALUE));
         while (true){
-            int currentSize = dateArray.size();
+            int currentSize = longArrayList.size();
             System.out.println("currentSize is " + currentSize);
-            for (int i=currentSize-1;i>=currentSize-(currentSize>>1);i--){
-                dateArray.remove((int) (Math.random()*dateArray.size()));
+            for (int i=currentSize-1;i>currentSize/2;i--){
+                longArrayList.remove((int) (Math.random()*longArrayList.size()));
             }
             for (int i = 0; i < currentSize; i++) {
-                dateArray.add(new Date());
+                longArrayList.add((long)(Math.random()*Long.MAX_VALUE));
             }
         }
     }
