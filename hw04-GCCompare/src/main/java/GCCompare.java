@@ -10,17 +10,18 @@ import java.util.List;
  */
 
 public class GCCompare {
+    static final int ARRAY_SIZE = 64;
     public static void main(String ... args){
-        List<Long> longArrayList = new ArrayList<>();
-        longArrayList.add((long) (Math.random() * Long.MAX_VALUE));
+        List<int[]> intArrayList = new ArrayList<>();
+        intArrayList.add(new int[ARRAY_SIZE]);
         while (true){
-            int currentSize = longArrayList.size();
+            int currentSize = intArrayList.size();
             System.out.println("currentSize is " + currentSize);
             for (int i=currentSize-1;i>currentSize/2;i--){
-                longArrayList.remove((int) (Math.random()*longArrayList.size()));
+                intArrayList.remove((int) (Math.random()*intArrayList.size()));
             }
             for (int i = 0; i < currentSize; i++) {
-                longArrayList.add((long)(Math.random()*Long.MAX_VALUE));
+                intArrayList.add(new int[ARRAY_SIZE]);
             }
         }
     }
