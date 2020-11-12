@@ -1,2 +1,3 @@
 rootProject.name = 'otus_hw'
+include 'hw05-AOPprincipes'
 
