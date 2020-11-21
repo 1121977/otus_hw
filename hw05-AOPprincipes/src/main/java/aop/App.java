@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 
 public class App {
     static public void main(String ... args) {
-        Class<?> classLoaderClass = App.class.getClassLoader().getClass();
+        Class<? extends ClassLoader> classLoaderClass = App.class.getClassLoader().getClass();
         if( classLoaderClass != AOPClassLoader.class) {
             AOPClassLoader aopClassLoader = new AOPClassLoader();
             try {

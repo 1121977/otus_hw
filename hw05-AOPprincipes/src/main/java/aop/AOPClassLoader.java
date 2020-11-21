@@ -1,13 +1,24 @@
 package aop;
 
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.FixedValue;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.Proxy;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.objectweb.asm.Opcodes.ASM9;
 
 public class AOPClassLoader extends ClassLoader {
     private List<Method> annotatedMethods;
@@ -39,20 +50,37 @@ public class AOPClassLoader extends ClassLoader {
                 annotatedMethods.add(method);
             }
         }
-        Field [] fields = resultClass.getFields();
-        methods[0].se
-        if(!markedInterfacesList.isEmpty()) {
-            AOPInvocationHandler aopInvocationHandler = new AOPInvocationHandler();
-            Method [] proxyMethods = Proxy.newProxyInstance(this, markedInterfacesList
-                    .toArray(this.getClass().getInterfaces())/*передать Class<?> []*/, aopInvocationHandler).
-                    getClass().getMethods();
-            for (int i =0; i< methods.length; i++){
-                i.
-                if(methods[i].isAnnotationPresent(Log.class)){
-                    methods[i]=findMethodWithSameSignatureInArray(methods[i],proxyMethods);
+        if (!markedInterfacesList.isEmpty()) {
+            Enhancer enhancer = new Enhancer();
+            enhancer.setSuperclass(resultClass);
+            MethodInterceptor methodInterceptor = (obj, method, args, proxy) -> {
+                if (method.isAnnotationPresent(Log.class)) {
+                    for (int i = 0; i < args.length; i++) {
+                        System.out.println(args[i]);
+                    }
                 }
-                System.out.println("Annotated method is " + methods[i].getName());
+                return proxy.invokeSuper(obj, args);
+            };
+            enhancer.setCallback(methodInterceptor);
+            Class<?> testedClass = enhancer.create(new Class[]{}, new Object[]{}).getClass();
+            try {
+                ClassReader cr = new ClassReader("aop.UsefulImpl");
+                ClassWriter cw = new ClassWriter(0);
+/*                ClassVisitor cv = new ClassVisitor(ASM9,cw) {
+                    @Override
+                    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+                        super.visit(version, access, name, signature, superName, interfaces);
+                    }
+                };*/
+                ClassPrinter cp = new ClassPrinter();
+                cr.accept(cp, 0);
+                System.out.println("aa");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+            Useful useful = (UsefulImpl) enhancer.create();
+            System.out.println(useful.sayHelloTo("name"));
+            System.out.println(new UsefulImpl().sayHelloTo("a"));
         }
         return resultClass;
     }
@@ -66,38 +94,40 @@ public class AOPClassLoader extends ClassLoader {
         if (interfaces.length != 0) {
             Arrays.stream(interfaces)
                     .filter(i -> Arrays.stream(i.getDeclaredMethods())
-                            .filter(m -> compareMethodSignature(m,method)).count() > 0)
+                            .filter(m -> compareMethodSignature(m, method)).count() > 0)
                     .forEach(chosenInterfacesList::add);
 //            Arrays.stream(interfaces).forEach(i -> determinateCarryingInterfaces(method, i.getInterfaces(), chosenInterfacesSet));
-            for(int i =0; i< interfaces.length; i++){
+            for (int i = 0; i < interfaces.length; i++) {
                 determinateMarkedInterfaces(method, interfaces[i].getInterfaces(), chosenInterfacesList);
             }
         }
     }
-    private boolean compareMethodSignature(Method method1, Method method2){
-        Class<?> [] parameterTypesM1 = method1.getParameterTypes();
-        Class<?> [] parameterTypesM2 = method2.getParameterTypes();
-        if(parameterTypesM1.length!=parameterTypesM2.length) {return false;}
-        else {
+
+    private boolean compareMethodSignature(Method method1, Method method2) {
+        Class<?>[] parameterTypesM1 = method1.getParameterTypes();
+        Class<?>[] parameterTypesM2 = method2.getParameterTypes();
+        if (parameterTypesM1.length != parameterTypesM2.length) {
+            return false;
+        } else {
             for (int i = 0; i < parameterTypesM1.length; i++) {
-                if(parameterTypesM1[i]!=parameterTypesM2[i]) {
+                if (parameterTypesM1[i] != parameterTypesM2[i]) {
                     return false;
                 }
             }
         }
-        if (!method1.getName().equals(method2.getName())){
-            return false;
+        if (method1.getName().equals(method2.getName())) {
+            return true;
         }
-        return true;
+        return false;
     }
 
-    private Method findMethodWithSameSignatureInArray(Method method, Method [] proxyMethods){
+ /*   private Method findMethodWithSameSignatureInArray(Method method, Method [] proxyMethods){
         for(Method proxyMethod: proxyMethods){
             if(compareMethodSignature(proxyMethod, method)){
                 return proxyMethod;
             }
         }
         return null;
-    }
+    }*/
 
 }
