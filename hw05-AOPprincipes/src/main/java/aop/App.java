@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 
 public class App {
     static public void main(String ... args) {
-        Class<? extends ClassLoader> classLoaderClass = App.class.getClassLoader().getClass();
+        var classLoaderClass = App.class.getClassLoader().getClass();
         if( classLoaderClass != AOPClassLoader.class) {
             AOPClassLoader aopClassLoader = new AOPClassLoader();
             try {
@@ -17,8 +17,9 @@ public class App {
         }
         else{
             try {
-                Useful useful = new UsefulImpl();
-                useful.sayHelloTo("Otus");
+                new UsefulImpl().sayHelloTo("bb");
+/*                Useful useful = new UsefulImpl();
+                useful.sayHelloTo("Otus");*/
                 System.out.println("App.main is run from AOPClassloader");
             }
             catch (Exception e){

@@ -19,6 +19,8 @@ dependencies {
     compile group: 'cglib', name: 'cglib', version: '3.3.0'
 // https://mvnrepository.com/artifact/org.ow2.asm/asm
     compile group: 'org.ow2.asm', name: 'asm', version: '9.0'
+// https://mvnrepository.com/artifact/org.ow2.asm/asm-util
+    compile group: 'org.ow2.asm', name: 'asm-util', version: '9.0'
 }
 
 mainClassName = 'aop.App'

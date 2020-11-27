@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -51,36 +52,27 @@ public class AOPClassLoader extends ClassLoader {
             }
         }
         if (!markedInterfacesList.isEmpty()) {
-            Enhancer enhancer = new Enhancer();
-            enhancer.setSuperclass(resultClass);
-            MethodInterceptor methodInterceptor = (obj, method, args, proxy) -> {
-                if (method.isAnnotationPresent(Log.class)) {
-                    for (int i = 0; i < args.length; i++) {
-                        System.out.println(args[i]);
-                    }
-                }
-                return proxy.invokeSuper(obj, args);
-            };
-            enhancer.setCallback(methodInterceptor);
-            Class<?> testedClass = enhancer.create(new Class[]{}, new Object[]{}).getClass();
             try {
                 ClassReader cr = new ClassReader("aop.UsefulImpl");
                 ClassWriter cw = new ClassWriter(0);
+                Class<?> afterSam;
+                byte [] b2;
 /*                ClassVisitor cv = new ClassVisitor(ASM9,cw) {
                     @Override
                     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
                         super.visit(version, access, name, signature, superName, interfaces);
                     }
                 };*/
-                ClassPrinter cp = new ClassPrinter();
-                cr.accept(cp, 0);
+//                ClassPrinter cp = new ClassPrinter();
+                AOPMethodTransformationByLogAnnotation aopMethodTransformationByLogAnnotation = new AOPMethodTransformationByLogAnnotation(ASM9,cw);
+                cr.accept(aopMethodTransformationByLogAnnotation, 0);
+                b2 = cw.toByteArray();
+                afterSam = defineClass(name, b2, 0, b2.length);
                 System.out.println("aa");
+                return afterSam;
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Useful useful = (UsefulImpl) enhancer.create();
-            System.out.println(useful.sayHelloTo("name"));
-            System.out.println(new UsefulImpl().sayHelloTo("a"));
         }
         return resultClass;
     }

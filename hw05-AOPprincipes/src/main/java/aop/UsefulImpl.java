@@ -4,19 +4,19 @@ public class UsefulImpl implements Useful {
     public UsefulImpl(){}
 
     @Override
-    public String sayHelloTo() {
-        return "Hello!";
+    public void sayHelloTo() {
+//        return "Hello!";
+    }
+
+    @Override
+    public void sayHelloTo(String name) {
+//        return "Hello, " + name +"!";
     }
 
     @Log
     @Override
-    public String sayHelloTo(String name) {
-        return "Hello, " + name +"!";
-    }
-
-    @Override
-    public String sayHelloTo(String name, short howMany) {
-        return "Hello, " + name + "! " + howMany + " times.";
+    public void sayHelloTo(String name, short howMany) {
+//        return "Hello, " + name + "! " + howMany + " times.";
     }
 
 }
