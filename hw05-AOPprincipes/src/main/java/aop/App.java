@@ -5,22 +5,19 @@ import java.lang.reflect.Method;
 public class App {
     static public void main(String ... args) {
         var classLoaderClass = App.class.getClassLoader().getClass();
-        if( classLoaderClass != AOPClassLoader.class) {
+        if( !classLoaderClass.getName().equals(AOPClassLoader.class.getName())) { //иначе сравнивать классы невозможно, так как это различные объекты
             AOPClassLoader aopClassLoader = new AOPClassLoader();
             try {
-                Class<?> loadClass = aopClassLoader.defineAppClass();
+                Class<?> loadClass = aopClassLoader.loadClass("aop.App", false);
                 Method method = loadClass.getMethod("main", new Class[]{String[].class});
                 method.invoke(null, new Object[]{args});
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else{
+        } else{// классы с AOP писать в этом блоке.
             try {
                 new UsefulImpl().sayHelloTo("bb");
-/*                Useful useful = new UsefulImpl();
-                useful.sayHelloTo("Otus");*/
-                System.out.println("App.main is run from AOPClassloader");
+                new UsefulImpl().sayHelloTo("cc", (short) 23);
             }
             catch (Exception e){
                 e.printStackTrace();
