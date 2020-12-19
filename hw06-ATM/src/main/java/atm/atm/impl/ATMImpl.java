@@ -4,15 +4,11 @@ import atm.Nominal;
 import atm.atm.ATM;
 import atm.cell.Cell;
 import atm.cell.impl.CellImpl;
-import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 public class ATMImpl implements ATM {
     private List<Cell> atmStorage;
-
-    private BufferedReader bufferedReader;
 
     private ATMImpl() {
 
@@ -20,6 +16,10 @@ public class ATMImpl implements ATM {
         for (Nominal nominal : Nominal.values()) {
             this.atmStorage.add(new CellImpl(nominal, 5));
         }
+    }
+
+    public List<Cell> getAtmStorage(){
+        return new ArrayList<>(this.atmStorage);
     }
 
     @Override
@@ -39,13 +39,9 @@ public class ATMImpl implements ATM {
         if (sum % 100 != 0) {
             throw new IllegalArgumentException("Введена некорректная сумма. Минимальная купюра - 100р.");
         }
-        if (sum > this.getBalance()) {
-            throw new IllegalArgumentException("Запрашиваемая сумма превышает остаток денег в банкомате.");
-        }
         List<Nominal> outList = new ArrayList<>();
         List<Nominal> nominalList = new ArrayList<>(this.atmStorage.stream().map(Cell::getNominal).collect(Collectors.toList()));
         nominalList.sort(Comparator.reverseOrder());
-
         Map<Nominal, Integer> checkMap = new HashMap<>();
         for (Nominal nominal : nominalList) {
             Integer mustGive = sum / nominal.getNominal();
@@ -87,16 +83,6 @@ public class ATMImpl implements ATM {
                 }
             minCountCell.get(1);
         }
-    }
-
-    @Override
-    public Integer getBalance() {
-
-        Integer balance = 0;
-        for (Cell cell : this.atmStorage) {
-            balance += cell.getCount() * cell.getNominal().getNominal();
-        }
-        return balance;
     }
 
     public static class ATMImplBuilder {

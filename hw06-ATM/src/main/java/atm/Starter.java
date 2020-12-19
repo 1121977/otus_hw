@@ -1,13 +1,13 @@
 package atm;
 
-import atm.atm.ATM;
+import atm.atm.ATMService;
 import atm.atm.impl.ATMImpl;
-
+import atm.atm.impl.ATMServiceImpl;
 import java.util.List;
 import java.util.Scanner;
 
 public class Starter {
-    private ATM atm;
+    private ATMImpl atm;
 
     public static void main(String args[]) {
         Starter starter = new Starter();
@@ -50,7 +50,8 @@ public class Starter {
                     System.out.println("");
                     break;
                 case "rest":
-                    System.out.println("Balance is " + starter.atm.getBalance());
+                    ATMService atmService = new ATMServiceImpl(starter.atm);
+                    System.out.println("Balance is " + atmService.getBalance());
                     break;
                 default:
                     System.out.println("Incorrect command");
