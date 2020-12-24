@@ -33,4 +33,4 @@ tasks.withType(JavaCompile) {
     }
 }
 
-mainClassName = 'HomeWork'
+mainClassName = 'ru.otus.HomeWork'
