@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'application'
 }
 
 group 'ru.otus'
@@ -23,5 +22,3 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-
-mainClassName = 'ru.otus.Application'
