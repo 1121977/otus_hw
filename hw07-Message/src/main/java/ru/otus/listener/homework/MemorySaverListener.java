@@ -3,11 +3,12 @@ package ru.otus.listener.homework;
 import ru.otus.listener.Listener;
 import ru.otus.model.Message;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class MemorySaverListener implements Listener {
 
-    private List<OldNewMessageBundle> messagesCredential = new ArrayList<>();
+    private final List<OldNewMessageBundle> messagesCredential = new ArrayList<>();
 
     @Override
     public void onUpdated(Message oldMsg, Message newMsg) {
@@ -21,6 +22,8 @@ public class MemorySaverListener implements Listener {
         OldNewMessageBundle(Message oldMessage, Message newMessage) {
             this.oldMessage = oldMessage.toBuilder().build();
             this.newMessage = newMessage.toBuilder().build();
+            this.oldMessage.getField13().setData(new ArrayList<>(oldMessage.getField13().getData()));
+            this.newMessage.getField13().setData(new ArrayList<>(newMessage.getField13().getData()));
         }
     }
 }

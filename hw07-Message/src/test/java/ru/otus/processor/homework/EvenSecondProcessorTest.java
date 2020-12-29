@@ -6,15 +6,17 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.otus.model.Message;
 import ru.otus.processor.Processor;
+
 import java.time.DateTimeException;
 import java.time.LocalTime;
+
 import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EvenSecondProcessorTest {
 
     Message message;
-    Processor evenSecondProcessor;
+    EvenSecondProcessor evenSecondProcessor;
 
     @BeforeEach
     void setUp() {
@@ -24,16 +26,13 @@ class EvenSecondProcessorTest {
 
     @Test
     void processTest() {
-        try {
-            if(LocalTime.now().getSecond()%2==0){
-                sleep(1000L);
-            }
-            sleep(1000L-System.currentTimeMillis()%1000);
+        LocalTime time = LocalTime.now();
+        if (time.getSecond() % 2 != 0) {
+            time.plusSeconds(1L);
         }
-        catch (InterruptedException e){
-            System.out.println("Test interrupted");
-            assertFalse(true, "Test interrupted");
-        }
+        evenSecondProcessor.setTime(time);
         assertThrows(DateTimeException.class, () -> evenSecondProcessor.process(message));
+        evenSecondProcessor.setTime(time.minusSeconds(1L));
+        assertEquals(message, evenSecondProcessor.process(message));
     }
 }
