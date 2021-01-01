@@ -133,11 +133,9 @@ public class Message {
     }
 
     public Message clone() {
-        Message.Builder clonedMessageBuilder;
+        Message.Builder clonedMessageBuilder = this.toBuilder();
         if (this.field13!=null) {
-            clonedMessageBuilder = this.toBuilder().field13(this.field13.clone());
-        } else {
-            clonedMessageBuilder = this.toBuilder();
+            clonedMessageBuilder = clonedMessageBuilder.field13(this.field13.clone());
         }
         return clonedMessageBuilder.build();
     }
