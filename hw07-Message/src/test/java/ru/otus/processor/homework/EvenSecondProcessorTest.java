@@ -5,9 +5,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.otus.model.Message;
+import ru.otus.processor.DateTimeProvider;
 import ru.otus.processor.Processor;
 
 import java.time.DateTimeException;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static java.lang.Thread.sleep;
@@ -21,18 +23,18 @@ class EvenSecondProcessorTest {
     @BeforeEach
     void setUp() {
         message = Mockito.mock(Message.class);
-        evenSecondProcessor = new EvenSecondProcessor();
     }
 
     @Test
     void processTest() {
-        LocalTime time = LocalTime.now();
-        if (time.getSecond() % 2 != 0) {
-            time.plusSeconds(1L);
-        }
-        evenSecondProcessor.setTime(time);
+        DateTimeProvider evenSecondProvider = () -> {
+            LocalDateTime localDateTime = LocalDateTime.now();
+            return localDateTime.getSecond()%2 !=0 ? localDateTime.plusSeconds(1L):localDateTime;
+        };
+        evenSecondProcessor = new EvenSecondProcessor(evenSecondProvider);
         assertThrows(DateTimeException.class, () -> evenSecondProcessor.process(message));
-        evenSecondProcessor.setTime(time.minusSeconds(1L));
+        DateTimeProvider oddSecondProvider = () -> evenSecondProvider.getDateTime().minusSeconds(1L);
+        evenSecondProcessor.setDateTimeProvider(oddSecondProvider);
         assertEquals(message, evenSecondProcessor.process(message));
     }
 }

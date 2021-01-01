@@ -12,4 +12,12 @@ public class ObjectForMessage {
     public void setData(List<String> data) {
         this.data = data;
     }
+
+    public ObjectForMessage clone(){
+        ObjectForMessage clonedObjectForMessage = new ObjectForMessage();
+        if (data != null){
+            clonedObjectForMessage.data = data.subList(0,data.size());
+        }
+        return clonedObjectForMessage;
+    }
 }

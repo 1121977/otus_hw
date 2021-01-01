@@ -20,10 +20,8 @@ public class MemorySaverListener implements Listener {
         Message newMessage;
 
         OldNewMessageBundle(Message oldMessage, Message newMessage) {
-            this.oldMessage = oldMessage.toBuilder().build();
-            this.newMessage = newMessage.toBuilder().build();
-            this.oldMessage.getField13().setData(new ArrayList<>(oldMessage.getField13().getData()));
-            this.newMessage.getField13().setData(new ArrayList<>(newMessage.getField13().getData()));
+            this.oldMessage = oldMessage.clone();
+            this.newMessage = newMessage.clone();
         }
     }
 }

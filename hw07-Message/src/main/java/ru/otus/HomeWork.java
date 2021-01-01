@@ -8,6 +8,7 @@ import ru.otus.processor.Processor;
 import ru.otus.processor.homework.EvenSecondProcessor;
 import ru.otus.processor.homework.Field1112ChangerProcessor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class HomeWork {
@@ -26,7 +27,7 @@ public class HomeWork {
            по аналогии с Demo.class
            из элеменов "to do" создать new ComplexProcessor и обработать сообщение
          */
-        List<Processor> processors = List.of(new EvenSecondProcessor(), new Field1112ChangerProcessor());
+        List<Processor> processors = List.of(new EvenSecondProcessor(LocalDateTime::now), new Field1112ChangerProcessor());
         Handler complexProcessor = new ComplexProcessor(processors, (ex) -> {});
         complexProcessor.addListener(new MemorySaverListener());
         Message message = new Message.Builder(1L)
