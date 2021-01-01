@@ -1,7 +1,5 @@
 package ru.otus.model;
 
-import java.util.ArrayList;
-
 public class Message {
     private final long id;
     private final String field1;
