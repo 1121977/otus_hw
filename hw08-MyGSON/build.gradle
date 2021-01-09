@@ -26,6 +26,9 @@ dependencies {
     testCompile group: 'org.mockito', name: 'mockito-core', version: '3.6.28'
     // https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter
     testCompile group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.6.28'
+    // https://mvnrepository.com/artifact/org.glassfish/javax.json
+    compile group: 'org.glassfish', name: 'javax.json', version: '1.1.4'
+
 }
 
 test {
