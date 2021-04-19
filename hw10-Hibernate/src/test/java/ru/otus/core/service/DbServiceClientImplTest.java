@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.core.dao.ClientDao;
 import ru.otus.core.model.Client;
+import ru.otus.core.model.PhoneData;
 import ru.otus.core.service.DbServiceClientImpl;
 import ru.otus.core.service.DbServiceException;
 import ru.otus.core.sessionmanager.SessionManager;
@@ -52,6 +53,10 @@ class DbServiceClientImplTest {
     @DisplayName(" корректно сохранять клиента")
     void shouldCorrectSaveClient() {
         var vasya = new Client();
+        PhoneData phoneDataHome = new PhoneData("+7(495)1324567");
+        PhoneData phoneDataMobile = new PhoneData("+7(917)5016148");
+        vasya.addPhoneData(phoneDataHome);
+        vasya.addPhoneData(phoneDataMobile);
         given(clientDao.insertOrUpdate(vasya)).willReturn(CLIENT_ID);
         long id = dbServiceClient.saveClient(vasya);
         assertThat(id).isEqualTo(CLIENT_ID);
@@ -87,6 +92,10 @@ class DbServiceClientImplTest {
     @DisplayName(" корректно загружать клиента по заданному id")
     void shouldLoadCorrectClientById() {
         Client expectedClient = new Client(CLIENT_ID, "Вася");
+        PhoneData phoneDataHome = new PhoneData("+7(495)1324567");
+        PhoneData phoneDataMobile = new PhoneData("+7(917)5016148");
+        expectedClient.addPhoneData(phoneDataMobile);
+        expectedClient.addPhoneData(phoneDataHome);
         given(clientDao.findById(CLIENT_ID)).willReturn(Optional.of(expectedClient));
         Optional<Client> mayBeClient = dbServiceClient.getClient(CLIENT_ID);
         assertThat(mayBeClient).isPresent().get().isEqualTo(expectedClient);

@@ -2,6 +2,8 @@ package ru.otus.core.model;
 
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "client")
@@ -14,6 +16,11 @@ public class Client {
 
     @Column(name = "name")
     private String name;
+
+    @OneToMany(orphanRemoval = true,
+                cascade = CascadeType.ALL)
+    @JoinColumn(name = "clientid")
+    Set<PhoneData> phoneDataSet = new HashSet<>();
 
     public Client() {
     }
@@ -39,11 +46,19 @@ public class Client {
         this.name = name;
     }
 
+    public void addPhoneData(PhoneData phoneData){
+       phoneDataSet.add(phoneData);
+    }
+
+    public Set<PhoneData> getPhoneDataSet(){
+        return new HashSet(phoneDataSet);
+    }
+
     @Override
     public String toString() {
         return "Client{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                '}';
+                phoneDataSet.toString() +'}';
     }
 }

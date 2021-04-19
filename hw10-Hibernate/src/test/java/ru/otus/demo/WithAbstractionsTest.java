@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import ru.otus.base.AbstractHibernateTest;
 import ru.otus.core.dao.ClientDao;
 import ru.otus.core.model.Client;
+import ru.otus.core.model.PhoneData;
 import ru.otus.core.service.DBServiceClient;
 import ru.otus.core.service.DbServiceClientImpl;
 import ru.otus.hibernate.dao.ClientDaoHibernate;
@@ -33,6 +34,10 @@ class WithAbstractionsTest extends AbstractHibernateTest {
     @DisplayName(" корректно сохранять клиента")
     void shouldCorrectSaveClient() {
         Client savedClient = buildDefaultClient();
+        PhoneData phoneDataHome = new PhoneData("+7(495)1324567");
+        PhoneData phoneDataMobile = new PhoneData("+7(917)7654321");
+        savedClient.addPhoneData(phoneDataHome);
+        savedClient.addPhoneData(phoneDataMobile);
         long id = dbServiceClient.saveClient(savedClient);
         Client loadedClient = loadClient(id);
 
@@ -46,6 +51,11 @@ class WithAbstractionsTest extends AbstractHibernateTest {
     @DisplayName(" корректно загружать клиента")
     void shouldLoadCorrectClient() {
         Client savedClient = buildDefaultClient();
+        PhoneData phoneDataHome = new PhoneData("+7(495)1324567");
+        PhoneData phoneDataMobile = new PhoneData("+7(917)7654321");
+        savedClient.addPhoneData(phoneDataHome);
+        savedClient.addPhoneData(phoneDataMobile);
+
         saveClient(savedClient);
 
         Optional<Client> mayBeClient = dbServiceClient.getClient(savedClient.getId());
@@ -60,9 +70,14 @@ class WithAbstractionsTest extends AbstractHibernateTest {
     @DisplayName(" корректно изменять ранее сохраненного клиента")
     void shouldCorrectUpdateSavedClient() {
         Client savedClient = buildDefaultClient();
+        PhoneData phoneDataHome = new PhoneData("+7(495)1324567");
+        savedClient.addPhoneData(phoneDataHome);
         saveClient(savedClient);
 
         Client savedClient2 = new Client(savedClient.getId(), TEST_CLIENT_NEW_NAME);
+        PhoneData phoneDataMobile = new PhoneData("+7(917)7654321");
+        savedClient2.addPhoneData(phoneDataMobile);
+
         long id = dbServiceClient.saveClient(savedClient2);
         Client loadedClient = loadClient(id);
 
