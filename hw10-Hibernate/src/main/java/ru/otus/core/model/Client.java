@@ -18,7 +18,8 @@ public class Client {
     private String name;
 
     @OneToMany(orphanRemoval = true,
-                cascade = CascadeType.ALL)
+                cascade = CascadeType.ALL,
+                fetch = FetchType.EAGER)
     @JoinColumn(name = "clientid")
     Set<PhoneData> phoneDataSet = new HashSet<>();
 

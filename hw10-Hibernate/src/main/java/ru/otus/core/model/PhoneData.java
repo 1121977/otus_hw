@@ -13,9 +13,6 @@ public class PhoneData {
     @Column(name = "number")
     final private String number;
 
-    @Column(name = "clientid")
-    private long clientid;
-
     public PhoneData(){
         number = "default";
     }
