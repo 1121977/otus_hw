@@ -1,15 +1,12 @@
-﻿# Примеры для курса "Разработчик Java" в OTUS
+﻿Напишите свой json object writer (object to JSON string) аналогичный gson на основе javax.json.
 
-Группа 2020-09
+Gson это делает так: Gson gson = new Gson(); AnyObject obj = new AnyObject(22, "test", 10); String json = gson.toJson(obj);
 
-### Преподаватели
-Сергей Петрелевич<br>
-Стрекалов Павел<br>
-Александр Оруджев<br>
-Вячеслав Лапин<br>
-Виталий Куценко<br>
-Дмитрий Коган
+Сделайте так: MyGson myGson = new MyGson(); AnyObject obj = new AnyObject(22, "test", 10); String myJson = myGson.toJson(obj);
 
-Студент:
-Kashapov Renat (Кашапов Ренат)<br>
-renat.kashapov@gmail.com
+Должно получиться: AnyObject obj2 = gson.fromJson(myJson, AnyObject.class); System.out.println(obj.equals(obj2));
+
+Поддержите:
+
+примитивные типы и Wrapper-ы (Integer, Float и т.д.) строки массивы примитивных типов коллекции (interface Collection)
+Не забываться, что obj может быть null :)
