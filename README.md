@@ -1,15 +1,9 @@
-﻿# Примеры для курса "Разработчик Java" в OTUS
+﻿#изучить как устроена стандартная коллекция ArrayList. Попрактиковаться в создании своей коллекции.
 
-Группа 2020-09
+Написать свою реализацию ArrayList на основе массива. class DIYarrayList implements List{...}
 
-### Преподаватели
-Сергей Петрелевич<br>
-Стрекалов Павел<br>
-Александр Оруджев<br>
-Вячеслав Лапин<br>
-Виталий Куценко<br>
-Дмитрий Коган
+Проверить, что на ней работают методы из java.util.Collections: Collections.addAll(Collection<? super T> c, T... elements) Collections.static void copy(List<? super T> dest, List<? extends T> src) Collections.static void sort(List list, Comparator<? super T> c)
 
-Студент:
-Kashapov Renat (Кашапов Ренат)<br>
-renat.kashapov@gmail.com
+Проверяйте на коллекциях с 20 и больше элементами.
+DIYarrayList должен имплементировать ТОЛЬКО ОДИН интерфейс - List.
+Если метод не имплементирован, то он должен выбрасывать исключение UnsupportedOperationException.
