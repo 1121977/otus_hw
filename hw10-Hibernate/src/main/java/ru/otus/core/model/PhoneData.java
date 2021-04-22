@@ -29,4 +29,18 @@ public class PhoneData {
     public String toString(){
         return getNumber();
     }
+
+    @Override
+    public boolean equals(Object obj){
+        if(obj==null){
+            return false;
+        }
+        if(this==obj){
+            return true;
+        }
+        if(obj instanceof PhoneData){
+            return this.number == ((PhoneData) obj).number;
+        }
+        return false;
+    }
 }
