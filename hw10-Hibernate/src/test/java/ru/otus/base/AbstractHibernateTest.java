@@ -9,6 +9,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import ru.otus.core.model.AddressDataSet;
 import ru.otus.core.model.Client;
 import ru.otus.core.model.PhoneData;
 import ru.otus.flyway.MigrationsExecutorFlyway;
@@ -50,7 +51,7 @@ public abstract class AbstractHibernateTest {
         configuration.setProperty("hibernate.connection.username", dbUserName);
         configuration.setProperty("hibernate.connection.password", dbPassword);
 
-        sessionFactory = HibernateUtils.buildSessionFactory(configuration, Client.class, PhoneData.class);
+        sessionFactory = HibernateUtils.buildSessionFactory(configuration, Client.class, PhoneData.class, AddressDataSet.class);
     }
 
     @AfterEach
@@ -59,7 +60,7 @@ public abstract class AbstractHibernateTest {
     }
 
     protected Client buildDefaultClient() {
-        return new Client(0, TEST_CLIENT_NAME);
+        return new Client( TEST_CLIENT_NAME);
     }
 
     protected void saveClient(Client client) {

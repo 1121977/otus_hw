@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.otus.base.AbstractHibernateTest;
 import ru.otus.core.dao.ClientDao;
+import ru.otus.core.model.AddressDataSet;
 import ru.otus.core.model.Client;
 import ru.otus.core.model.PhoneData;
 import ru.otus.core.service.DBServiceClient;
@@ -13,6 +14,8 @@ import ru.otus.hibernate.dao.ClientDaoHibernate;
 import ru.otus.hibernate.sessionmanager.SessionManagerHibernate;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.BiPredicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,6 +41,8 @@ class WithAbstractionsTest extends AbstractHibernateTest {
         PhoneData phoneDataMobile = new PhoneData("+7(917)7654321");
         savedClient.addPhoneData(phoneDataHome);
         savedClient.addPhoneData(phoneDataMobile);
+        AddressDataSet addressDataSet = new AddressDataSet("Lenin",savedClient);
+        savedClient.setAddress(addressDataSet);
         long id = dbServiceClient.saveClient(savedClient);
         Client loadedClient = loadClient(id);
 
@@ -55,6 +60,8 @@ class WithAbstractionsTest extends AbstractHibernateTest {
         PhoneData phoneDataMobile = new PhoneData("+7(917)7654321");
         savedClient.addPhoneData(phoneDataHome);
         savedClient.addPhoneData(phoneDataMobile);
+        AddressDataSet addressDataSet = new AddressDataSet("Lenin",savedClient);
+        savedClient.setAddress(addressDataSet);
 
         saveClient(savedClient);
 
@@ -74,14 +81,36 @@ class WithAbstractionsTest extends AbstractHibernateTest {
         savedClient.addPhoneData(phoneDataHome);
         saveClient(savedClient);
 
-        Client savedClient2 = new Client(savedClient.getId(), TEST_CLIENT_NEW_NAME);
+        Client savedClient2 = new Client(TEST_CLIENT_NEW_NAME);
         PhoneData phoneDataMobile = new PhoneData("+7(917)7654321");
+        phoneDataHome = new PhoneData("+7(917)1234567");
         savedClient2.addPhoneData(phoneDataMobile);
+        savedClient2.addPhoneData(phoneDataHome);
+        AddressDataSet addressDataSet = new AddressDataSet("Lenin",savedClient2);
+        savedClient2.setAddress(addressDataSet);
 
         long id = dbServiceClient.saveClient(savedClient2);
         Client loadedClient = loadClient(id);
 
-        assertThat(loadedClient).isNotNull().usingRecursiveComparison().isEqualTo(savedClient2);
+        BiPredicate<Set<PhoneData>,Set<PhoneData>> biPredicate = (set1,set2) -> {
+            if(set1.size()!=set2.size()){
+                return false;
+            }
+            for (PhoneData phoneDataFromSet1:set1){
+                boolean result=false;
+                for (PhoneData phoneDataFromSet2:set2){
+                    if (phoneDataFromSet1.equals(phoneDataFromSet2)){
+                        result = true;
+                        break;
+                    }
+                }
+                if (!result){
+                    return false;
+                }
+            }
+            return true;
+        };
+        assertThat(loadedClient).isNotNull().usingRecursiveComparison().withEqualsForFields(biPredicate,"phoneDataSet").isEqualTo(savedClient2);
 
         System.out.println(savedClient);
         System.out.println(savedClient2);

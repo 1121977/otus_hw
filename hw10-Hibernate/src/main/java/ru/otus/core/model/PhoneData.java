@@ -39,7 +39,7 @@ public class PhoneData {
             return true;
         }
         if(obj instanceof PhoneData){
-            return this.number == ((PhoneData) obj).number;
+            return this.number.compareTo(((PhoneData) obj).getNumber())==0;
         }
         return false;
     }

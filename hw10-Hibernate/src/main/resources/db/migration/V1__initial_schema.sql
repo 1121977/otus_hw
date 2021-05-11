@@ -14,6 +14,7 @@ create table client
 (
     id bigint not null,
     primary key (id),
+    addressid bigint,
     name varchar(50)
 );
 
@@ -26,4 +27,19 @@ create table phoneData
         foreign key(clientid)
             references client(id)
 );
+
+create table addressdataset
+(
+    id bigint not null primary key,
+    street varchar(50),
+    CONSTRAINT fk_client_addressdataset FOREIGN KEY (id)
+            REFERENCES public.client (id)
+);
+
+CREATE SEQUENCE public.id_generator
+    INCREMENT 50
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
 
