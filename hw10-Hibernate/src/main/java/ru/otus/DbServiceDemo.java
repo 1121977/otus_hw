@@ -5,7 +5,9 @@ import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.core.dao.ClientDao;
+import ru.otus.core.model.AddressDataSet;
 import ru.otus.core.model.Client;
+import ru.otus.core.model.PhoneData;
 import ru.otus.core.service.DBServiceClient;
 import ru.otus.core.service.DbServiceClientImpl;
 import ru.otus.flyway.MigrationsExecutorFlyway;
@@ -30,22 +32,26 @@ public class DbServiceDemo {
         new MigrationsExecutorFlyway(dbUrl, dbUserName, dbPassword).executeMigrations();
 
         // Все главное см в тестах
-        SessionFactory sessionFactory = HibernateUtils.buildSessionFactory(configuration, Client.class);
+        SessionFactory sessionFactory = HibernateUtils.buildSessionFactory(configuration, Client.class, PhoneData.class, AddressDataSet.class);
 
         SessionManagerHibernate sessionManager = new SessionManagerHibernate(sessionFactory);
         ClientDao userDao = new ClientDaoHibernate(sessionManager);
         DBServiceClient dbServiceClient = new DbServiceClientImpl(userDao);
 
-
-        long id = dbServiceClient.saveClient(new Client(0, "Вася"));
-        Optional<Client> mayBeCreatedClient = dbServiceClient.getClient(id);
+        Client vasia = new Client("Вася");
+        AddressDataSet address = new AddressDataSet("Lenina str.", vasia);
+        vasia.addPhoneData(new PhoneData("+79175016148"));
+        vasia.setAddress(address);
+        long id = dbServiceClient.saveClient(vasia);
+//        long id = dbServiceClient.saveClient(new Client(0, "Вася"));
+/*        Optional<Client> mayBeCreatedClient = dbServiceClient.getClient(id);
         mayBeCreatedClient.ifPresentOrElse((client) -> outputClient("Created client", client),
                 () -> logger.info("Client not found"));
 
         id = dbServiceClient.saveClient(new Client(1L, "А! Нет. Это же совсем не Вася"));
         Optional<Client> mayBeUpdatedClient = dbServiceClient.getClient(id);
         mayBeUpdatedClient.ifPresentOrElse((client) -> outputClient("Updated client", client),
-                () -> logger.info("Client not found"));
+                () -> logger.info("Client not found"));*/
     }
 
     private static void outputClient(String header, Client client) {

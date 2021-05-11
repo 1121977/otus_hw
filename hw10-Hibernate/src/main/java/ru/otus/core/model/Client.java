@@ -10,9 +10,12 @@ import java.util.Set;
 public class Client {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = "ID_GENERATOR", strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     private long id;
+
+    @OneToOne(mappedBy = "client", cascade = CascadeType.ALL)
+    private AddressDataSet address;
 
     @Column(name = "name")
     private String name;
@@ -26,8 +29,7 @@ public class Client {
     public Client() {
     }
 
-    public Client(long id, String name) {
-        this.id = id;
+    public Client( String name) {
         this.name = name;
     }
 
@@ -51,8 +53,16 @@ public class Client {
        phoneDataSet.add(phoneData);
     }
 
+    public void setAddress(AddressDataSet  address){
+        this.address = address;
+    }
+
     public Set<PhoneData> getPhoneDataSet(){
         return new HashSet(phoneDataSet);
+    }
+
+    public AddressDataSet getAddress(){
+        return this.address;
     }
 
     @Override

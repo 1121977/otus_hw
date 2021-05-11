@@ -8,6 +8,7 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.core.dao.ClientDao;
+import ru.otus.core.model.AddressDataSet;
 import ru.otus.core.model.Client;
 import ru.otus.core.model.PhoneData;
 import ru.otus.core.service.DbServiceClientImpl;
@@ -55,6 +56,8 @@ class DbServiceClientImplTest {
         var vasya = new Client();
         PhoneData phoneDataHome = new PhoneData("+7(495)1324567");
         PhoneData phoneDataMobile = new PhoneData("+7(917)5016148");
+        AddressDataSet addressVasily = new AddressDataSet("Moscow");
+        vasya.setAddress(addressVasily);
         vasya.addPhoneData(phoneDataHome);
         vasya.addPhoneData(phoneDataMobile);
         given(clientDao.insertOrUpdate(vasya)).willReturn(CLIENT_ID);
@@ -91,11 +94,13 @@ class DbServiceClientImplTest {
     @Test
     @DisplayName(" корректно загружать клиента по заданному id")
     void shouldLoadCorrectClientById() {
-        Client expectedClient = new Client(CLIENT_ID, "Вася");
+        Client expectedClient = new Client( "Вася");
         PhoneData phoneDataHome = new PhoneData("+7(495)1324567");
         PhoneData phoneDataMobile = new PhoneData("+7(917)5016148");
         expectedClient.addPhoneData(phoneDataMobile);
         expectedClient.addPhoneData(phoneDataHome);
+        AddressDataSet addressVasily = new AddressDataSet("Moscow");
+        expectedClient.setAddress(addressVasily);
         given(clientDao.findById(CLIENT_ID)).willReturn(Optional.of(expectedClient));
         Optional<Client> mayBeClient = dbServiceClient.getClient(CLIENT_ID);
         assertThat(mayBeClient).isPresent().get().isEqualTo(expectedClient);
