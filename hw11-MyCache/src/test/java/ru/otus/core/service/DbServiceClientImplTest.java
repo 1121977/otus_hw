@@ -1,0 +1,108 @@
+package ru.otus.core.service;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import ru.otus.core.dao.ClientDao;
+import ru.otus.core.model.AddressDataSet;
+import ru.otus.core.model.Client;
+import ru.otus.core.model.PhoneData;
+import ru.otus.core.service.DbServiceClientImpl;
+import ru.otus.core.service.DbServiceException;
+import ru.otus.core.sessionmanager.SessionManager;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+
+
+@DisplayName("Сервис для работы с клиентами в рамках БД должен ")
+@ExtendWith(MockitoExtension.class)
+class DbServiceClientImplTest {
+
+    private static final long CLIENT_ID = 1L;
+
+    @Mock
+    private SessionManager sessionManager;
+
+    @Mock
+    private ClientDao clientDao;
+
+    private DbServiceClientImpl dbServiceClient;
+
+    private InOrder inOrder;
+
+    @BeforeEach
+    void setUp() {
+        given(clientDao.getSessionManager()).willReturn(sessionManager);
+        inOrder = inOrder(clientDao, sessionManager);
+        dbServiceClient = new DbServiceClientImpl(clientDao);
+    }
+
+    @Test
+    @DisplayName(" корректно сохранять клиента")
+    void shouldCorrectSaveClient() {
+        var vasya = new Client();
+        PhoneData phoneDataHome = new PhoneData("+7(495)1324567");
+        PhoneData phoneDataMobile = new PhoneData("+7(917)5016148");
+        AddressDataSet addressVasily = new AddressDataSet("Moscow");
+        vasya.setAddress(addressVasily);
+        vasya.addPhoneData(phoneDataHome);
+        vasya.addPhoneData(phoneDataMobile);
+        given(clientDao.insertOrUpdate(vasya)).willReturn(CLIENT_ID);
+        long id = dbServiceClient.saveClient(vasya);
+        assertThat(id).isEqualTo(CLIENT_ID);
+    }
+
+    @Test
+    @DisplayName(" при сохранении клиента, открывать и коммитить транзакцию в нужном порядке")
+    void shouldCorrectSaveClientAndOpenAndCommitTranInExpectedOrder() {
+        dbServiceClient.saveClient(new Client());
+
+        inOrder.verify(clientDao, times(1)).getSessionManager();
+        inOrder.verify(sessionManager, times(1)).beginSession();
+        inOrder.verify(sessionManager, times(1)).commitSession();
+        inOrder.verify(sessionManager, never()).rollbackSession();
+    }
+
+    @Test
+    @DisplayName(" при сохранении клиента, открывать и откатывать транзакцию в нужном порядке")
+    void shouldOpenAndRollbackTranWhenExceptionInExpectedOrder() {
+        doThrow(IllegalArgumentException.class).when(clientDao).insertOrUpdate(any());
+
+        assertThatThrownBy(() -> dbServiceClient.saveClient(null))
+                .isInstanceOf(DbServiceException.class)
+                .hasCauseInstanceOf(IllegalArgumentException.class);
+
+        inOrder.verify(clientDao, times(1)).getSessionManager();
+        inOrder.verify(sessionManager, times(1)).beginSession();
+        inOrder.verify(sessionManager, times(1)).rollbackSession();
+        inOrder.verify(sessionManager, never()).commitSession();
+    }
+
+    @Test
+    @DisplayName(" корректно загружать клиента по заданному id")
+    void shouldLoadCorrectClientById() {
+        Client expectedClient = new Client( "Вася");
+        PhoneData phoneDataHome = new PhoneData("+7(495)1324567");
+        PhoneData phoneDataMobile = new PhoneData("+7(917)5016148");
+        expectedClient.addPhoneData(phoneDataMobile);
+        expectedClient.addPhoneData(phoneDataHome);
+        AddressDataSet addressVasily = new AddressDataSet("Moscow");
+        expectedClient.setAddress(addressVasily);
+        given(clientDao.findById(CLIENT_ID)).willReturn(Optional.of(expectedClient));
+        Optional<Client> mayBeClient = dbServiceClient.getClient(CLIENT_ID);
+        assertThat(mayBeClient).isPresent().get().isEqualTo(expectedClient);
+    }
+}
