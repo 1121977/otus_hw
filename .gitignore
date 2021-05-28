@@ -10,6 +10,9 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+# vim swap files
+*.swp
+
 # Package Files #
 *.jar
 !gradle-wrapper.jar
