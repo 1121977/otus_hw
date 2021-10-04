@@ -28,6 +28,13 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    testImplementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30'
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.27.Final'
+    compile group: 'org.flywaydb', name: 'flyway-core', version: '7.5.2'
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.18'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '3.6.28'
+    testCompile group: 'org.testcontainers', name: 'postgresql', version: '1.15.1'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
 }
 
 test {
