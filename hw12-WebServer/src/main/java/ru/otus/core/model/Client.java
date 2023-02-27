@@ -1,6 +1,8 @@
 package ru.otus.core.model;
 
 
+import ru.otus.model.User;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -71,5 +73,9 @@ public class Client {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 phoneDataSet.toString() +'}';
+    }
+
+    public User toUser(){
+        return new User(id, name, name, name + id);
     }
 }

@@ -2,6 +2,7 @@ package ru.otus.core.service;
 
 import ru.otus.core.model.Client;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface DBServiceClient {
@@ -10,5 +11,5 @@ public interface DBServiceClient {
 
     Optional<Client> getClient(long id);
 
-    //List<Client> findAll();
+    List<Client> findAll();
 }

@@ -11,6 +11,8 @@ import ru.otus.core.sessionmanager.SessionManager;
 import ru.otus.hibernate.sessionmanager.DatabaseSessionHibernate;
 import ru.otus.hibernate.sessionmanager.SessionManagerHibernate;
 
+import javax.persistence.Query;
+import java.util.List;
 import java.util.Optional;
 
 public class ClientDaoHibernate implements ClientDao {
@@ -32,6 +34,19 @@ public class ClientDaoHibernate implements ClientDao {
             logger.error(e.getMessage(), e);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public List<Client> findAll() {
+        DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
+        try{
+            Query query = currentSession.getHibernateSession().createQuery("select cl from Client cl");
+            List<Client> clientList = query.getResultList();
+            return clientList;
+        } catch (Exception e){
+            logger.error(e.getMessage(), e);
+        }
+        return null;
     }
 
     @Override

@@ -6,6 +6,8 @@ import ru.otus.core.dao.ClientDao;
 import ru.otus.core.model.Client;
 import ru.otus.core.sessionmanager.SessionManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class DbServiceClientImpl implements DBServiceClient {
@@ -49,6 +51,21 @@ public class DbServiceClientImpl implements DBServiceClient {
                 sessionManager.rollbackSession();
             }
             return Optional.empty();
+        }
+    }
+
+    @Override
+    public List<Client> findAll() {
+        try (SessionManager sessionManager = clientDao.getSessionManager()) {
+            sessionManager.beginSession();
+            try {
+                List<Client> clientList = clientDao.findAll();
+                return clientList;
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                sessionManager.rollbackSession();
+            }
+            return new ArrayList<>();
         }
     }
 }
