@@ -64,7 +64,7 @@ public class WebServerWithBasicSecurityDemo {
         String hashLoginServiceConfigPath = FileSystemHelper.localFileNameOrResourceNameToFullPath(HASH_LOGIN_SERVICE_CONFIG_NAME);
         LoginService loginService = new HashLoginService(REALM_NAME, hashLoginServiceConfigPath);
         DBServiceClient dbServiceClient = new DbServiceClientImpl(clientDao);
-        for (int i = 0; i<7; i++) {
+        for (int i = 1; i<8; i++) {
             Client client = new Client("Ivan" + i);
             client.addPhoneData(new PhoneData("8800500500" + i));
             dbServiceClient.saveClient(client);
