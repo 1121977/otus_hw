@@ -57,12 +57,19 @@ public class WebServerWithBasicSecurityDemo {
 
         SessionManagerHibernate sessionManager = new SessionManagerHibernate(sessionFactory);
         ClientDao clientDao = new ClientDaoHibernate(sessionManager);
+
         Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
         TemplateProcessor templateProcessor = new TemplateProcessorImpl(TEMPLATES_DIR);
 
         String hashLoginServiceConfigPath = FileSystemHelper.localFileNameOrResourceNameToFullPath(HASH_LOGIN_SERVICE_CONFIG_NAME);
         LoginService loginService = new HashLoginService(REALM_NAME, hashLoginServiceConfigPath);
         DBServiceClient dbServiceClient = new DbServiceClientImpl(clientDao);
+        for (int i = 0; i<7; i++) {
+            Client client = new Client("Ivan" + i);
+            client.addPhoneData(new PhoneData("8800500500" + i));
+            dbServiceClient.saveClient(client);
+        }
+
         //LoginService loginService = new InMemoryLoginServiceImpl(userDao);
 
         UsersWebServer usersWebServer = new UsersWebServerWithBasicSecurity(WEB_SERVER_PORT,

@@ -72,7 +72,7 @@ public class Client {
         return "Client{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                phoneDataSet.toString() +'}';
+                "phone DataSet: " + phoneDataSet.toString() +'}';
     }
 
     public User toUser(){
