@@ -47,13 +47,7 @@ public class AddClientServlet extends HttpServlet {
         dbServiceClient.saveClient(newClient);
         response.sendRedirect("/clients");
 
-/*        if (userAuthService.authenticate(name, password)) {
-            HttpSession session = request.getSession();
-            session.setMaxInactiveInterval(MAX_INACTIVE_INTERVAL);
-            response.sendRedirect("/users");
-        } else {
-            response.setStatus(SC_UNAUTHORIZED);
-        }*/
+
 
     }
 
