@@ -1,5 +1,5 @@
 rootProject.name = 'otus_hw'
 include 'hw10-Hibernate'
 include 'hw12-WebServer'
-include 'hw12-WebServer'
+include 'hw14-SpringMVC'
 
