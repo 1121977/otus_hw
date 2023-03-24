@@ -7,7 +7,6 @@ import javax.persistence.*;
 public class PhoneData {
     @Id
     @Column(name = "id")
-//    @GeneratedValue(generator = "ID_GENERATOR", strategy = GenerationType.SEQUENCE)
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     long id;
 

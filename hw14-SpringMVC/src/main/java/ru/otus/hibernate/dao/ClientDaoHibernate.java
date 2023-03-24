@@ -4,6 +4,7 @@ package ru.otus.hibernate.dao;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import ru.otus.core.dao.ClientDao;
 import ru.otus.core.dao.ClientDaoException;
 import ru.otus.core.model.Client;

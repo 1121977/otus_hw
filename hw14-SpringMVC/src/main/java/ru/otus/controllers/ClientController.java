@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
 import ru.otus.core.model.Client;
+import ru.otus.core.model.PhoneData;
 import ru.otus.core.service.DBServiceClient;
 
 import java.util.List;
@@ -33,10 +34,24 @@ public class ClientController {
         return "clientCreate.html";
     }
 
+    @GetMapping("/phoneNumber/create")
+    public String phoneNumberCreateView(Model model) {
+        model.addAttribute("phoneNumber", new PhoneData());
+        return "phoneNumberCreate.html";
+    }
+
+
     @PostMapping("/client/save")
     public RedirectView clientSave(@ModelAttribute Client client) {
         clientService.saveClient(client);
         return new RedirectView("/", true);
     }
+
+    @PostMapping("/phoneNumber/save")
+    public RedirectView phoneNumberSave(@ModelAttribute PhoneData phoneData) {
+//        clientService.saveClient(client);
+        return new RedirectView("/", true);
+    }
+
 
 }

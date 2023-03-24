@@ -6,11 +6,11 @@
   <session-factory>
     <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL10Dialect</property>
 
+    <!-- using container-managed JNDI -->
+    <property name="hibernate.connection.datasource">
+      java:comp/env/jdbc/postgres
+    </property>
 
-    <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/otusDB</property>
-
-    <property name="hibernate.connection.username">user</property>
-    <property name="hibernate.connection.password">pwd</property>
 
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.generate_statistics">true</property>
