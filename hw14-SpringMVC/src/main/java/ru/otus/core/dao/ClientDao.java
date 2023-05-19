@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface ClientDao {
-    Optional<Client> findById(long id);
+public interface ClientDao extends DAO<Client> {
+/*    Optional<Client> findById(long id);
     List<Client> findAll();
 
     long insert(Client client);
@@ -17,5 +17,5 @@ public interface ClientDao {
 
     long insertOrUpdate(Client client);
 
-    SessionManager getSessionManager();
+    SessionManager getSessionManager();*/
 }

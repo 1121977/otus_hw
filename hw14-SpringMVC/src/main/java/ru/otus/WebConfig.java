@@ -17,11 +17,12 @@ import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import ru.otus.core.dao.ClientDao;
+import ru.otus.core.dao.ClientDaoImpl;
 import ru.otus.core.model.AddressDataSet;
 import ru.otus.core.model.Client;
 import ru.otus.core.model.PhoneData;
+import ru.otus.core.sessionmanager.SessionManager;
 import ru.otus.hibernate.HibernateUtils;
-import ru.otus.hibernate.dao.ClientDaoHibernate;
 import ru.otus.hibernate.sessionmanager.SessionManagerHibernate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -69,11 +70,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean   
     public ClientDao clientDao() {
-        org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration().configure(HIBERNATE_CFG_FILE);
+/*        org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration().configure(HIBERNATE_CFG_FILE);
         SessionFactory sessionFactory = HibernateUtils.buildSessionFactory(configuration, Client.class, PhoneData.class, AddressDataSet.class);
-        SessionManagerHibernate sessionManagerHibernate = new SessionManagerHibernate(sessionFactory);
-        ClientDao clientDao = new ClientDaoHibernate(sessionManagerHibernate);
-        return clientDao;
+        SessionManagerHibernate sessionManagerHibernate = new SessionManagerHibernate(sessionFactory);*/
+        return new ClientDaoImpl(sessionManager());
     }
 
     @Override
@@ -84,6 +84,13 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("/WEB-INF/static/");
+    }
+
+    @Bean
+    public SessionManagerHibernate sessionManager(){
+        org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration().configure(HIBERNATE_CFG_FILE);
+        SessionFactory sessionFactory = HibernateUtils.buildSessionFactory(configuration, Client.class, PhoneData.class, AddressDataSet.class);
+        return new SessionManagerHibernate(sessionFactory);
     }
 
 }

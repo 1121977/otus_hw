@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "phoneData")
-public class PhoneData {
+public class PhoneData implements Persistable{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -42,5 +42,10 @@ public class PhoneData {
             return this.number.compareTo(((PhoneData) obj).getNumber())==0;
         }
         return false;
+    }
+
+    @Override
+    public long getId() {
+        return this.id;
     }
 }

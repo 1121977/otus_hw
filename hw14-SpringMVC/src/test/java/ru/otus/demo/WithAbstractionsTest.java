@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.otus.base.AbstractHibernateTest;
 import ru.otus.core.dao.ClientDao;
+import ru.otus.core.dao.ClientDaoImpl;
 import ru.otus.core.model.AddressDataSet;
 import ru.otus.core.model.Client;
 import ru.otus.core.model.PhoneData;
@@ -29,7 +30,7 @@ class WithAbstractionsTest extends AbstractHibernateTest {
     public void setUp() {
         super.setUp();
         SessionManagerHibernate sessionManager = new SessionManagerHibernate(sessionFactory);
-        ClientDao clientDao = new ClientDaoHibernate(sessionManager);
+        ClientDao clientDao = new ClientDaoImpl(sessionManager);
         dbServiceClient = new DbServiceClientImpl(clientDao);
     }
 

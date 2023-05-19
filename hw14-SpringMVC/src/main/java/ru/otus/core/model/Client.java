@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "client")
-public class Client {
+public class Client implements Persistable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -35,6 +35,7 @@ public class Client {
         this.name = name;
     }
 
+    @Override
     public long getId() {
         return id;
     }
