@@ -5,16 +5,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import ru.otus.core.dao.AddressDataSetDao;
-import ru.otus.core.dao.AddressDataSetDaoImpl;
 import ru.otus.core.dao.ClientDao;
 import ru.otus.core.model.AddressDataSet;
 import ru.otus.core.model.Client;
 import ru.otus.core.model.PhoneData;
-import ru.otus.core.service.DBServiceClient;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.stream.Stream;
 
 @Controller
 public class ClientController {
