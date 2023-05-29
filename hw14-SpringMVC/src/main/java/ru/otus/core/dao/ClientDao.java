@@ -8,14 +8,4 @@ import java.util.Optional;
 
 
 public interface ClientDao extends DAO<Client> {
-/*    Optional<Client> findById(long id);
-    List<Client> findAll();
-
-    long insert(Client client);
-
-    void update(Client client);
-
-    long insertOrUpdate(Client client);
-
-    SessionManager getSessionManager();*/
 }

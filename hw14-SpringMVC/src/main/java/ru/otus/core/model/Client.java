@@ -61,7 +61,7 @@ public class Client implements Persistable {
     }
 
     public Set<PhoneData> getPhoneDataSet(){
-        return new HashSet(phoneDataSet);
+        return this.phoneDataSet;
     }
 
     public AddressDataSet getAddress(){

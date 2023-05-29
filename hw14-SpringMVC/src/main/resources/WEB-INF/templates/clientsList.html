@@ -79,12 +79,11 @@
         <tbody>
             <tr th:each="client : ${clients}">
                 <td th:text="${client.id}">1</td>
-                <td th:text="${client.name}">John Doe</td>
+                <td><a th:href="@{/client/{clientId}(clientId=${client.id})}" th:text="${client.name}">John Doe</a></td>
             </tr>
         </tbody>
     </table>
     <a th:href="@{/client/create}" href="clientCreate.html">New client</a>
-    <a th:href="@{/phoneNumber/create}" href="phoneNumberCreate.html">New phone</a>
 
     <br/><br/>
     <h3>Тест View без контроллера:</h3>

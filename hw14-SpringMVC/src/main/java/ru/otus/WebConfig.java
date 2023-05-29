@@ -16,6 +16,8 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+import ru.otus.core.dao.AddressDataSetDao;
+import ru.otus.core.dao.AddressDataSetDaoImpl;
 import ru.otus.core.dao.ClientDao;
 import ru.otus.core.dao.ClientDaoImpl;
 import ru.otus.core.model.AddressDataSet;
@@ -70,10 +72,12 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean   
     public ClientDao clientDao() {
-/*        org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration().configure(HIBERNATE_CFG_FILE);
-        SessionFactory sessionFactory = HibernateUtils.buildSessionFactory(configuration, Client.class, PhoneData.class, AddressDataSet.class);
-        SessionManagerHibernate sessionManagerHibernate = new SessionManagerHibernate(sessionFactory);*/
         return new ClientDaoImpl(sessionManager());
+    }
+
+    @Bean
+    public AddressDataSetDao addressDataSetDao(){
+        return new AddressDataSetDaoImpl(sessionManager());
     }
 
     @Override

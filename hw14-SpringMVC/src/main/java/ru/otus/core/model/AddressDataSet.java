@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "AddressDataSet")
-public class AddressDataSet {
+public class AddressDataSet implements Persistable{
     @Id
     @GeneratedValue(generator = "addressDataKeyGenerator")
     @GenericGenerator(
@@ -22,6 +22,7 @@ public class AddressDataSet {
     @OneToOne(optional = false)
     @PrimaryKeyJoinColumn
     private Client client;
+    @Column(name = "street")
     private String street;
     public AddressDataSet(){
     }
@@ -34,5 +35,22 @@ public class AddressDataSet {
     }
     public void setClient(Client client){
         this.client = client;
+    }
+
+    public String getStreet(){
+        return this.street;
+    }
+
+    public void setStreet(String street){
+        this.street = street;
+    }
+
+    @Override
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id){
+        this.id = id;
     }
 }
