@@ -61,6 +61,9 @@
     <div class="row">
         <button type="submit">Save</button>
     </div>
+    <div class="row" th:if="${client.name}">
+        <button type="submit" th:formaction="@{/client/delete}" th:formmethod="post">Delete Client</button>
+    </div>
 </form>
 
 <script>

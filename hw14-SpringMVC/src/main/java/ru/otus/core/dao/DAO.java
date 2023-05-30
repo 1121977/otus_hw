@@ -17,4 +17,6 @@ public interface DAO<T extends Persistable> {
     long insertOrUpdate(T t);
 
     SessionManager getSessionManager();
+
+    T delete(T t);
 }

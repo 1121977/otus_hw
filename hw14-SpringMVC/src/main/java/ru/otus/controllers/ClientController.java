@@ -59,5 +59,13 @@ public class ClientController {
         return "clientCreate.html";
     }
 
+    @PostMapping("/client/delete")
+    public RedirectView clientDelete(@ModelAttribute Client client, @ModelAttribute AddressDataSet addressDataSet) {
+        addressDataSetDao.delete(addressDataSet);
+        client.getPhoneDataSet().clear();
+        long clientID = clientDao.insertOrUpdate(client);
+        clientDao.delete(client);
+        return new RedirectView("/", true);
+    }
 
 }

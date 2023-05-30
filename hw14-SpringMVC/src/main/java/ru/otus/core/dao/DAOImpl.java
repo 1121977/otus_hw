@@ -104,9 +104,25 @@ public abstract class DAOImpl<T extends Persistable> implements DAO<T> {
         }
     }
 
-
     @Override
     public SessionManager getSessionManager() {
         return sessionManager;
+    }
+
+    @Override
+    public T delete(T t){
+        sessionManager.beginSession();
+        DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
+        try {
+            Session hibernateSession = currentSession.getHibernateSession();
+            if (t.getId() > 0) {
+                hibernateSession.delete(t);
+            }
+            sessionManager.commitSession();
+            return t;
+        } catch (Exception e) {
+            sessionManager.rollbackSession();
+            throw new ClientDaoException(e);
+        }
     }
 }
