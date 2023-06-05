@@ -1,34 +1,22 @@
 package ru.otus;
 
-import com.fasterxml.classmate.AnnotationConfiguration;
-import org.apache.tomcat.jdbc.pool.DataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Repository;
-import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.*;
-import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
-import ru.otus.core.dao.AddressDataSetDao;
-import ru.otus.core.dao.AddressDataSetDaoImpl;
 import ru.otus.core.dao.ClientDao;
 import ru.otus.core.dao.ClientDaoImpl;
 import ru.otus.core.model.AddressDataSet;
 import ru.otus.core.model.Client;
 import ru.otus.core.model.PhoneData;
-import ru.otus.core.sessionmanager.SessionManager;
 import ru.otus.hibernate.HibernateUtils;
 import ru.otus.hibernate.sessionmanager.SessionManagerHibernate;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @ComponentScan
@@ -73,11 +61,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean   
     public ClientDao clientDao() {
         return new ClientDaoImpl(sessionManager());
-    }
-
-    @Bean
-    public AddressDataSetDao addressDataSetDao(){
-        return new AddressDataSetDaoImpl(sessionManager());
     }
 
     @Override

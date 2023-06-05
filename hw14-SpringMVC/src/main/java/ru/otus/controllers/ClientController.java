@@ -16,11 +16,12 @@ import java.util.*;
 public class ClientController {
 
     private final ClientDao clientDao;
-    private final AddressDataSetDao addressDataSetDao;
+//    private final AddressDataSetDao addressDataSetDao;
 
-    public ClientController(ClientDao clientDao, AddressDataSetDao addressDataSetDao){
+//    public ClientController(ClientDao clientDao, AddressDataSetDao addressDataSetDao){
+public ClientController(ClientDao clientDao){
         this.clientDao = clientDao;
-        this.addressDataSetDao = addressDataSetDao;
+//        this.addressDataSetDao = addressDataSetDao;
     }
 
     @GetMapping({"/", "/client/list"})
@@ -42,9 +43,8 @@ public class ClientController {
     public RedirectView clientSave(@ModelAttribute Client client, @ModelAttribute AddressDataSet addressDataSet, @RequestParam HashMap<String, String> reqMap) {
         reqMap.entrySet().stream().filter(note -> note.getKey().startsWith("phone"))
                 .forEach(note -> client.getPhoneDataSet().add(new PhoneData(note.getValue())));
-        long clientID = clientDao.insertOrUpdate(client);
+        client.getPhoneDataSet().stream().forEach(phoneData -> phoneData.setClient(client));
         addressDataSet.setClient(client);
-        long addressDataSetID = addressDataSetDao.insertOrUpdate(addressDataSet);
         client.setAddress(addressDataSet);
         clientDao.update(client);
         return new RedirectView("/", true);
@@ -60,10 +60,7 @@ public class ClientController {
     }
 
     @PostMapping("/client/delete")
-    public RedirectView clientDelete(@ModelAttribute Client client, @ModelAttribute AddressDataSet addressDataSet) {
-        addressDataSetDao.delete(addressDataSet);
-        client.getPhoneDataSet().clear();
-        long clientID = clientDao.insertOrUpdate(client);
+    public RedirectView clientDelete(@ModelAttribute Client client) {
         clientDao.delete(client);
         return new RedirectView("/", true);
     }

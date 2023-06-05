@@ -2,6 +2,7 @@ package ru.otus.core.model;
 
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,16 +21,15 @@ public class Client implements Persistable {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(orphanRemoval = true,
-                cascade = CascadeType.ALL,
-                fetch = FetchType.EAGER)
-    @JoinColumn(name = "clientid")
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            mappedBy = "client")
     Set<PhoneData> phoneDataSet = new HashSet<>();
 
     public Client() {
     }
 
-    public Client( String name) {
+    public Client(String name) {
         this.name = name;
     }
 
@@ -50,19 +50,19 @@ public class Client implements Persistable {
         this.name = name;
     }
 
-    public void addPhoneData(PhoneData phoneData){
-       phoneDataSet.add(phoneData);
+    public void addPhoneData(PhoneData phoneData) {
+        phoneDataSet.add(phoneData);
     }
 
-    public void setAddress(AddressDataSet  address){
+    public void setAddress(AddressDataSet address) {
         this.address = address;
     }
 
-    public Set<PhoneData> getPhoneDataSet(){
+    public Set<PhoneData> getPhoneDataSet() {
         return this.phoneDataSet;
     }
 
-    public AddressDataSet getAddress(){
+    public AddressDataSet getAddress() {
         return this.address;
     }
 
@@ -71,7 +71,7 @@ public class Client implements Persistable {
         return "Client{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                "phone DataSet: " + phoneDataSet.toString() +'}';
+                "phone DataSet: " + phoneDataSet.toString() + '}';
     }
 
 }

@@ -11,7 +11,11 @@ public class PhoneData implements Persistable{
     long id;
 
     @Column(name = "number")
-    final private String number;
+    private String number;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "clientID", nullable = false)
+    private Client client;
 
     public PhoneData(){
         number = "default";
@@ -21,6 +25,14 @@ public class PhoneData implements Persistable{
         this.number = number;
     }
 
+    public PhoneData(String number, Client client){
+        this.client = client;
+        this.number = number;
+    }
+
+    public PhoneData(Client client){
+        this.client = client;
+    }
     public String getNumber(){
         return number;
     }
@@ -47,5 +59,13 @@ public class PhoneData implements Persistable{
     @Override
     public long getId() {
         return this.id;
+    }
+
+    public Client getClient(){
+        return this.client;
+    }
+
+    public void setClient(Client client){
+        this.client = client;
     }
 }

@@ -78,6 +78,15 @@ public class SessionManagerHibernate implements SessionManager {
         return databaseSession;
     }
 
+    @Override
+    public Session beginSessionWithoutTransaction() {
+        try {
+            return sessionFactory.openSession();
+        } catch (Exception e) {
+            throw new SessionManagerException(e);
+        }
+    }
+
     private void checkSessionAndTransaction() {
         if (databaseSession == null) {
             throw new SessionManagerException("DatabaseSession not opened ");

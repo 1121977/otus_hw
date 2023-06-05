@@ -4,21 +4,20 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.core.model.Persistable;
+import ru.otus.core.sessionmanager.DatabaseSession;
 import ru.otus.core.sessionmanager.SessionManager;
 import ru.otus.hibernate.sessionmanager.DatabaseSessionHibernate;
-import ru.otus.hibernate.sessionmanager.SessionManagerHibernate;
-
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public abstract class DAOImpl<T extends Persistable> implements DAO<T> {
-    protected final SessionManagerHibernate sessionManager;
+    protected final SessionManager sessionManager;
     protected final Class<T> entityClass;
     private static final Logger logger = LoggerFactory.getLogger(DAOImpl.class);
 
-    protected DAOImpl(SessionManagerHibernate sessionManager, Class<T> entityClass) {
+    protected DAOImpl(SessionManager sessionManager, Class<T> entityClass) {
         this.sessionManager = sessionManager;
         this.entityClass = entityClass;
     }
@@ -26,7 +25,7 @@ public abstract class DAOImpl<T extends Persistable> implements DAO<T> {
     @Override
     public Optional<T> findById(long id) {
         sessionManager.beginSession();
-        DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
+        DatabaseSession currentSession = sessionManager.getCurrentSession();
         try {
             Optional<T> result = Optional.ofNullable(currentSession.getHibernateSession().find(entityClass, id));
             sessionManager.commitSession();
@@ -111,14 +110,15 @@ public abstract class DAOImpl<T extends Persistable> implements DAO<T> {
 
     @Override
     public T delete(T t){
-        sessionManager.beginSession();
-        DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
+        Session session = sessionManager.beginSessionWithoutTransaction();
+        org.hibernate.Transaction tx = session.getTransaction();
         try {
-            Session hibernateSession = currentSession.getHibernateSession();
+            session.beginTransaction();
             if (t.getId() > 0) {
-                hibernateSession.delete(t);
+                T _t = session.find(entityClass, t.getId());
+                session.delete(_t);
             }
-            sessionManager.commitSession();
+            tx.commit();
             return t;
         } catch (Exception e) {
             sessionManager.rollbackSession();
