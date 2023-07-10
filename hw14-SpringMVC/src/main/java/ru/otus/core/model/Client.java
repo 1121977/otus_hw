@@ -1,6 +1,9 @@
 package ru.otus.core.model;
 
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.util.HashSet;
@@ -22,8 +25,9 @@ public class Client implements Persistable {
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
-            mappedBy = "client")
+            mappedBy = "client",
+            orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.EXTRA)
     Set<PhoneData> phoneDataSet = new HashSet<>();
 
     public Client() {

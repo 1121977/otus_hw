@@ -2,16 +2,7 @@ package ru.otus.core.sessionmanager;
 
 import org.hibernate.Session;
 
-public interface SessionManager extends AutoCloseable {
-    void beginSession();
+public interface SessionManager {
+    Session beginSession();
 
-    void commitSession();
-
-    void rollbackSession();
-
-    void close();
-
-    DatabaseSession getCurrentSession();
-
-    Session beginSessionWithoutTransaction();
 }

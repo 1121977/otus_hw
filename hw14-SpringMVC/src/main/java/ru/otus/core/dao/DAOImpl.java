@@ -4,11 +4,8 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.core.model.Persistable;
-import ru.otus.core.sessionmanager.DatabaseSession;
 import ru.otus.core.sessionmanager.SessionManager;
-import ru.otus.hibernate.sessionmanager.DatabaseSessionHibernate;
 import javax.persistence.Query;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,81 +21,79 @@ public abstract class DAOImpl<T extends Persistable> implements DAO<T> {
 
     @Override
     public Optional<T> findById(long id) {
-        sessionManager.beginSession();
-        DatabaseSession currentSession = sessionManager.getCurrentSession();
-        try {
-            Optional<T> result = Optional.ofNullable(currentSession.getHibernateSession().find(entityClass, id));
-            sessionManager.commitSession();
+        org.hibernate.Transaction tx = null;
+        try (Session session = sessionManager.beginSession()){
+            tx = session.beginTransaction();
+            Optional<T> result = Optional.ofNullable(session.find(entityClass, id));
+            tx.commit();
             return result;
         } catch (Exception e) {
+            if(tx!=null) tx.rollback();
             logger.error(e.getMessage(), e);
-            sessionManager.rollbackSession();
+            throw new ClientDaoException(e);
         }
-        return Optional.empty();
     }
 
     @Override
     public List<T> findAll() {
-        sessionManager.beginSession();
-        DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
-        try {
-            Query query = currentSession.getHibernateSession().createQuery("select t from " + entityClass.getName() + " t");
+        org.hibernate.Transaction tx = null;
+        try (Session session = sessionManager.beginSession()){
+            tx = session.beginTransaction();
+            Query query = session.createQuery("select t from " + entityClass.getName() + " t");
             List<T> tList = query.getResultList();
-            sessionManager.commitSession();
+            tx.commit();
             return tList;
         } catch (Exception e) {
+            if(tx!=null) tx.rollback();
             logger.error(e.getMessage(), e);
-            sessionManager.rollbackSession();
+            throw new ClientDaoException(e);
         }
-        return new ArrayList<T>();
     }
 
     @Override
     public long insert(T t) {
-        sessionManager.beginSession();
-        DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
-        try {
-            Session hibernateSession = currentSession.getHibernateSession();
-            hibernateSession.persist(t);
-            hibernateSession.flush();
-            sessionManager.commitSession();
+        org.hibernate.Transaction tx = null;
+        try (Session session = sessionManager.beginSession()){
+            tx = session.beginTransaction();
+            session.persist(t);
+            tx.commit();
             return t.getId();
         } catch (Exception e) {
-            sessionManager.rollbackSession();
+            if(tx!=null) tx.rollback();
+            logger.error(e.getMessage(), e);
             throw new ClientDaoException(e);
         }
     }
 
     @Override
     public void update(T t) {
-        sessionManager.beginSession();
-        DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
-        try {
-            Session hibernateSession = currentSession.getHibernateSession();
-            hibernateSession.merge(t);
-            sessionManager.commitSession();
+        org.hibernate.Transaction tx = null;
+        try (Session session = sessionManager.beginSession()){
+            tx = session.beginTransaction();
+//            session.merge(t);
+            session.update(t);
+            tx.commit();
         } catch (Exception e) {
-            sessionManager.rollbackSession();
+            if(tx!=null) tx.rollback();
+            logger.error(e.getMessage(), e);
             throw new ClientDaoException(e);
         }
     }
 
     @Override
     public long insertOrUpdate(T t) {
-        sessionManager.beginSession();
-        DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
-        try {
-            Session hibernateSession = currentSession.getHibernateSession();
+        org.hibernate.Transaction tx = null;
+        try (Session session = sessionManager.beginSession()){
+            tx = session.beginTransaction();
             if (t.getId() > 0) {
-                hibernateSession.merge(t);
+                session.merge(t);
             } else {
-                hibernateSession.persist(t);
-                hibernateSession.flush();
+                session.persist(t);
             }
-            sessionManager.commitSession();
+            tx.commit();
             return t.getId();
         } catch (Exception e) {
-            sessionManager.rollbackSession();
+            tx.rollback();
             throw new ClientDaoException(e);
         }
     }
@@ -109,11 +104,10 @@ public abstract class DAOImpl<T extends Persistable> implements DAO<T> {
     }
 
     @Override
-    public T delete(T t){
-        Session session = sessionManager.beginSessionWithoutTransaction();
-        org.hibernate.Transaction tx = session.getTransaction();
-        try {
-            session.beginTransaction();
+    public T delete(T t) {
+        org.hibernate.Transaction tx = null;
+        try (Session session = sessionManager.beginSession()) {
+            tx = session.beginTransaction();
             if (t.getId() > 0) {
                 T _t = session.find(entityClass, t.getId());
                 session.delete(_t);
@@ -121,7 +115,8 @@ public abstract class DAOImpl<T extends Persistable> implements DAO<T> {
             tx.commit();
             return t;
         } catch (Exception e) {
-            sessionManager.rollbackSession();
+            if(tx!=null) tx.rollback();
+            logger.error(e.getMessage(), e);
             throw new ClientDaoException(e);
         }
     }
