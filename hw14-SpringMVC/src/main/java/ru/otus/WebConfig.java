@@ -12,9 +12,12 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import ru.otus.core.dao.ClientDao;
 import ru.otus.core.dao.ClientDaoImpl;
+import ru.otus.core.dao.RoleDao;
+import ru.otus.core.dao.RoleDaoImpl;
 import ru.otus.core.model.AddressDataSet;
 import ru.otus.core.model.Client;
 import ru.otus.core.model.PhoneData;
+import ru.otus.core.model.Role;
 import ru.otus.hibernate.HibernateUtils;
 import ru.otus.hibernate.sessionmanager.SessionManagerHibernate;
 
@@ -63,6 +66,11 @@ public class WebConfig implements WebMvcConfigurer {
         return new ClientDaoImpl(sessionManager());
     }
 
+    @Bean
+    public RoleDao roleDao(){
+        return new RoleDaoImpl(sessionManager());
+    }
+
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/no-handler-view").setViewName("noHandlerView");
@@ -76,7 +84,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public SessionManagerHibernate sessionManager(){
         org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration().configure(HIBERNATE_CFG_FILE);
-        SessionFactory sessionFactory = HibernateUtils.buildSessionFactory(configuration, Client.class, PhoneData.class, AddressDataSet.class);
+        SessionFactory sessionFactory = HibernateUtils.buildSessionFactory(configuration, Client.class, PhoneData.class, AddressDataSet.class, Role.class);
         return new SessionManagerHibernate(sessionFactory);
     }
 

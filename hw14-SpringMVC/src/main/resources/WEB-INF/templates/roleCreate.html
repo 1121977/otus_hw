@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${role.id} == 0 ? 'Create role' : 'Edit role'">New Role:</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<form id="create-form" th:action="@{/role/save}" th:method="post" accept-charset="utf-8">
+    <h1 th:text="${role.id} == 0 ? 'New role:' : ${role.authority}">New Role:</h1>
+
+    <div class="row">
+        <label for="holder-input">Name:</label>
+        <input id="holder-input" name="authority" type="text" th:value="${role.authority}" value="Some Role"/>
+        <input id="id-input" name="id" type="text" th:value="${role.id}" value="0" hidden="hidden"/>
+        <br/>
+    </div>
+
+    <div class="row">
+        <button type="submit">Save</button>
+    </div>
+    <div class="row" th:if="${role.authority}">
+        <button type="submit" th:formaction="@{/role/delete}" th:formmethod="post">Delete Role</button>
+    </div>
+</form>
+
+</body>
+</html>

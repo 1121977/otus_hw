@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>List of all clients</title>
+    <title>Search result</title>
 
 
     <style type="text/css">
@@ -42,37 +42,38 @@
         }
 
         h3 {
+            background: url("../static/listmark.png") no-repeat;
             padding: 2px;
             padding-left: 30px;
         }
     </style>
 
-    <style th:inline="text">
+    <style inline="text">
         h3 {
+            background: url([[@{/static/listmark.png}]]) no-repeat;
             padding: 2px;
             padding-left: 30px;
         }
     </style>
 </head>
-<body>
-    <h3>Клиенты:</h3>
-
-    <table class="clients">
-        <thead>
+    <body>
+        <h3>Клиенты:</h3>
+        <table class="clients">
+            <thead>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <tr th:each="client : ${clients}">
                 <td th:text="${client.id}">1</td>
                 <td><a th:href="@{/client/{clientId}(clientId=${client.id})}" th:text="${client.name}">John Doe</a></td>
             </tr>
-        </tbody>
-    </table>
-    <a th:href="@{/client/create}" href="clientCreate.html">New client</a>
+            </tbody>
+        </table>
 
 
-</body>
+
+    </body>
 </html>

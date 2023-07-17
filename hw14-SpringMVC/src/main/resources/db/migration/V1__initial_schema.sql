@@ -6,7 +6,7 @@ create table client
     name varchar(50)
 );
  */
-
+/*
 -- Для @GeneratedValue(strategy = GenerationType.SEQUENCE)
 create sequence hibernate_sequence start with 4 increment by 1;
 
@@ -43,3 +43,6 @@ CREATE SEQUENCE public.id_generator
     MAXVALUE 9223372036854775807
     CACHE 1;
 
+*/
+
+insert role(authority) values ('ROLE_USER');

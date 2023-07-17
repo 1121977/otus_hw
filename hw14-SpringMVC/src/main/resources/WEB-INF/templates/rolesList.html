@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>List of all clients</title>
+    <title>List of all Roles</title>
 
 
     <style type="text/css">
@@ -10,7 +10,7 @@
             padding: 50px;
         }
 
-        .clients, .clients td {
+        .roles, .roles td {
             border: 1px solid lightgray;
             padding: 5px;
             margin-bottom: 10px;
@@ -55,24 +55,25 @@
     </style>
 </head>
 <body>
-    <h3>Клиенты:</h3>
+<h3>Roles:</h3>
 
-    <table class="clients">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="client : ${clients}">
-                <td th:text="${client.id}">1</td>
-                <td><a th:href="@{/client/{clientId}(clientId=${client.id})}" th:text="${client.name}">John Doe</a></td>
-            </tr>
-        </tbody>
-    </table>
-    <a th:href="@{/client/create}" href="clientCreate.html">New client</a>
-
+<table class="roles">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Role</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="role : ${roles}">
+        <td th:text="${role.id}">1</td>
+        <td><a th:href="@{/role/{roleId}(roleId=${role.id})}" th:text="${role.authority}">Some Role</a></td>
+    </tr>
+    </tbody>
+</table>
+<a th:href="@{/role/create}" href="roleCreate.html">New role</a>
+<br/>
+<a href="/app/static/index.html">Start Page</a>
 
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Create client</title>
+    <title th:text="${client.id} == 0 ? 'Create client' : 'Edit client'">New Client:</title>
     <style type="text/css">
         body {
             padding: 50px;
@@ -31,6 +31,9 @@
         <label for="holder-input">Name:</label>
         <input id="holder-input" name="name" type="text" th:value="${client.name}" value="John Doe"/>
         <input id="id-input" name="id" type="text" th:value="${client.id}" value="0" hidden="hidden"/>
+        <br/>
+        <label for="password-input">Password:</label>
+        <input id="password-input" name="password" type="password" th:value="${client.password}" value="*******"/>
     </div>
 
     <div class="row">

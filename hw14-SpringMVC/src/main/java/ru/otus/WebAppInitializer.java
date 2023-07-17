@@ -4,6 +4,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+import ru.otus.securingweb.SecurityConfig;
 
 import javax.servlet.Filter;
 import javax.servlet.ServletRegistration;
@@ -18,7 +19,7 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-                return new Class<?>[]{WebConfig.class};
+        return new Class<?>[]{WebConfig.class};
     }
 
     @Override

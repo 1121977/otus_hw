@@ -54,6 +54,10 @@ public class ClientController {
             reqMap.entrySet().stream().filter(entry -> entry.getKey().startsWith("phone"))
                     .filter(entry -> client.getPhoneDataSet().stream().noneMatch(phoneData -> phoneData.equals(new PhoneData(entry.getValue()))))
                     .forEach(entry -> client.getPhoneDataSet().add(new PhoneData(entry.getValue(), client)));
+            if (!clientFromForm.getName().equals(client.getName()))
+                client.setName(clientFromForm.getName());
+            if(!clientFromForm.getPassword().equals(client.getPassword()))
+                client.setPassword(clientFromForm.getPassword());
         }
         addressDataSet.setClient(client);
         client.setAddress(addressDataSet);
