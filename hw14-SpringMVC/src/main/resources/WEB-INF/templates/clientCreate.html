@@ -42,6 +42,14 @@
         <input id="address-id-input" name="id" type="text" th:value="${addressDataSet.id}" value="0" hidden="hidden"/>
     </div>
 
+    <div class="row">
+        <select id="role" name="role">
+            <option th:value="ROLE_USER" th:text="User"></option>
+            <option th:value="ROLE_STAFF" th:text="Staff"></option>
+            <option th:value="ROLE_ADMIN" th:text="Admin"></option>
+        </select>
+    </div>
+
     <table class="phones row">
         <thead>
         <tr>
@@ -52,7 +60,7 @@
         <tbody class="phonesBody">
             <tr th:each="phone,status : ${phones}">
                 <td th:text="${status.count}">1</td>
-                <td><input type="text" th:value="${phone.number}" th:name="phone + ${status.count}" value="John Doe"></td>
+                <td><input type="text" th:value="${phone.number}" th:name="phone + ${status.count}" value="888"></td>
             </tr>
         </tbody>
     </table>

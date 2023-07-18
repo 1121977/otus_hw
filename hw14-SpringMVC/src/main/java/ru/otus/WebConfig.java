@@ -12,8 +12,6 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import ru.otus.core.dao.ClientDao;
 import ru.otus.core.dao.ClientDaoImpl;
-import ru.otus.core.dao.RoleDao;
-import ru.otus.core.dao.RoleDaoImpl;
 import ru.otus.core.model.AddressDataSet;
 import ru.otus.core.model.Client;
 import ru.otus.core.model.PhoneData;
@@ -64,11 +62,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean   
     public ClientDao clientDao() {
         return new ClientDaoImpl(sessionManager());
-    }
-
-    @Bean
-    public RoleDao roleDao(){
-        return new RoleDaoImpl(sessionManager());
     }
 
     @Override

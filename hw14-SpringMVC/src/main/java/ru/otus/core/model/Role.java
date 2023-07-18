@@ -1,18 +1,13 @@
 package ru.otus.core.model;
 
 import org.springframework.security.core.GrantedAuthority;
-
 import javax.persistence.*;
 
-@Entity
+@Embeddable
 @Table(name = "role")
-public class Role implements GrantedAuthority, Persistable {
-    @Column(name = "authority")
+public class Role implements GrantedAuthority {
+    @Column(nullable = false)
     String authority;
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
-    private long id;
 
     public Role(){}
 
@@ -25,16 +20,9 @@ public class Role implements GrantedAuthority, Persistable {
         return authority;
     }
 
-    @Override
-    public long getId() {
-        return this.id;
-    }
 
     public void setAuthority(String authority){
         this.authority = authority;
     }
 
-    public void setId(long id){
-        this.id = id;
-    }
 }

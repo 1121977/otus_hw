@@ -8,6 +8,7 @@ import ru.otus.core.dao.ClientDao;
 import ru.otus.core.model.AddressDataSet;
 import ru.otus.core.model.Client;
 import ru.otus.core.model.PhoneData;
+import ru.otus.core.model.Role;
 import java.util.*;
 @Controller
 public class ClientController {
@@ -30,11 +31,12 @@ public class ClientController {
         model.addAttribute("client", new Client());
         model.addAttribute("addressDataSet", new AddressDataSet());
         model.addAttribute("phones", new PhoneData(""));
+        model.addAttribute("role", new Role(""));
         return "clientCreate.html";
     }
 
     @PostMapping("/client/save")
-    public RedirectView clientSave(@ModelAttribute Client clientFromForm, @ModelAttribute AddressDataSet addressDataSet, @RequestParam HashMap<String, String> reqMap) {
+    public RedirectView clientSave(@ModelAttribute Client clientFromForm, @ModelAttribute AddressDataSet addressDataSet, @ModelAttribute Role role, @RequestParam HashMap<String, String> reqMap) {
         Client client;
         if (clientFromForm.getId() == 0) {
             client = clientFromForm;

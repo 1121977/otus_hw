@@ -5,13 +5,11 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "client")
-public class Client  implements Persistable, UserDetails {
+public class Client implements Persistable, UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -33,6 +31,8 @@ public class Client  implements Persistable, UserDetails {
     @LazyCollection(LazyCollectionOption.EXTRA)
     Set<PhoneData> phoneDataSet = new HashSet<>();
 
+    Role role;
+
     public Client() {
     }
 
@@ -40,7 +40,7 @@ public class Client  implements Persistable, UserDetails {
         this.name = name;
     }
 
-    public Client(String name, String password){
+    public Client(String name, String password) {
         this.name = name;
         this.password = password;
     }
@@ -88,7 +88,9 @@ public class Client  implements Persistable, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
+        grantedAuthorityList.add(this.role);
+        return grantedAuthorityList;
     }
 
     @Override
@@ -101,8 +103,8 @@ public class Client  implements Persistable, UserDetails {
         return getName();
     }
 
-    public void setPassword(String password){
-        this.password = password.startsWith("{noop}")? password :"{noop}" + password;
+    public void setPassword(String password) {
+        this.password = password.startsWith("{noop}") ? password : "{noop}" + password;
     }
 
     @Override
@@ -123,5 +125,13 @@ public class Client  implements Persistable, UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public Role getRole() {
+        return role;
     }
 }
